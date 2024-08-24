@@ -7,8 +7,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-//todo: add separate handlers
-
 // @Summary Greetings from Pismo-Test
 // @Description Greetings from Pismo-Test
 // @Tags root

@@ -1,3 +1,7 @@
+### migration
+- migrate -database "postgres://pismo-user:pismo-secret@localhost:5433/pismo?sslmode=disable"  -path db/migrations  up
+
+
 - each cardholder(customer) has an account with their data/document.
 
 

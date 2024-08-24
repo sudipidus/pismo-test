@@ -1,0 +1,1 @@
+drop TABLE operation_type

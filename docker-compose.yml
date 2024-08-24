@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:13
+    container_name: pismo-postgres
+    environment:
+      POSTGRES_USER: pismo-user
+      POSTGRES_PASSWORD: pismo-secret
+      POSTGRES_DB: pismo
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+volumes:
+  db_data:
+    driver: local

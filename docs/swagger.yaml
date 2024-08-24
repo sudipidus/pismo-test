@@ -1,0 +1,70 @@
+info:
+  contact: {}
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: Greetings from Pismo-Test
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Greetings from Pismo-Test
+      tags:
+      - root
+  /accounts:
+    post:
+      consumes:
+      - application/json
+      description: Create a new account
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+      summary: Create a new account
+      tags:
+      - accounts
+  /accounts/{accountID}:
+    get:
+      consumes:
+      - application/json
+      description: Get an account by ID
+      parameters:
+      - description: Account ID
+        in: path
+        name: accountID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get an account by ID
+      tags:
+      - accounts
+  /transactions:
+    post:
+      consumes:
+      - application/json
+      description: Create a new transaction
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+      summary: Create a new transaction
+      tags:
+      - transactions
+swagger: "2.0"
