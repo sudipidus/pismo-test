@@ -2,11 +2,16 @@ package main
 
 import (
 	"fmt"
+	"github.com/joho/godotenv"
+	"github.com/sudipidus/pismo-test/config"
+	"github.com/sudipidus/pismo-test/db"
+	_ "github.com/sudipidus/pismo-test/db"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 
+	"github.com/sudipidus/pismo-test/logger"
 	"github.com/sudipidus/pismo-test/routes"
 	httpSwagger "github.com/swaggo/http-swagger"
 	_ "github.com/swaggo/http-swagger/example/gorilla/docs"
@@ -23,8 +28,17 @@ import (
 
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-
 func main() {
+	logger.InitLogger()
+
+	config.Init()
+
+	db.Init()
+
+	// Load environment variables from .env file
+	if err := godotenv.Load(); err != nil {
+		log.Fatalf("WrappedError loading .env file: %v", err)
+	}
 
 	r := mux.NewRouter()
 

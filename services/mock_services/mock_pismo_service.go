@@ -13,6 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
+	services "github.com/sudipidus/pismo-test/services"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -40,25 +41,27 @@ func (m *MockPismoService) EXPECT() *MockPismoServiceMockRecorder {
 }
 
 // CreateAccount mocks base method.
-func (m *MockPismoService) CreateAccount(ctx context.Context) string {
+func (m *MockPismoService) CreateAccount(ctx context.Context, request services.CreateAccountRequest) (any, *services.ServiceError) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateAccount", ctx)
-	ret0, _ := ret[0].(string)
-	return ret0
+	ret := m.ctrl.Call(m, "CreateAccount", ctx, request)
+	ret0, _ := ret[0].(any)
+	ret1, _ := ret[1].(*services.ServiceError)
+	return ret0, ret1
 }
 
 // CreateAccount indicates an expected call of CreateAccount.
-func (mr *MockPismoServiceMockRecorder) CreateAccount(ctx any) *gomock.Call {
+func (mr *MockPismoServiceMockRecorder) CreateAccount(ctx, request any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccount", reflect.TypeOf((*MockPismoService)(nil).CreateAccount), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccount", reflect.TypeOf((*MockPismoService)(nil).CreateAccount), ctx, request)
 }
 
 // CreateTransaction mocks base method.
-func (m *MockPismoService) CreateTransaction(ctx context.Context) string {
+func (m *MockPismoService) CreateTransaction(ctx context.Context) (any, *services.ServiceError) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateTransaction", ctx)
-	ret0, _ := ret[0].(string)
-	return ret0
+	ret0, _ := ret[0].(any)
+	ret1, _ := ret[1].(*services.ServiceError)
+	return ret0, ret1
 }
 
 // CreateTransaction indicates an expected call of CreateTransaction.
@@ -68,11 +71,12 @@ func (mr *MockPismoServiceMockRecorder) CreateTransaction(ctx any) *gomock.Call 
 }
 
 // FetchAccount mocks base method.
-func (m *MockPismoService) FetchAccount(ctx context.Context, accountID string) string {
+func (m *MockPismoService) FetchAccount(ctx context.Context, accountID string) (any, *services.ServiceError) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FetchAccount", ctx, accountID)
-	ret0, _ := ret[0].(string)
-	return ret0
+	ret0, _ := ret[0].(any)
+	ret1, _ := ret[1].(*services.ServiceError)
+	return ret0, ret1
 }
 
 // FetchAccount indicates an expected call of FetchAccount.
@@ -82,11 +86,12 @@ func (mr *MockPismoServiceMockRecorder) FetchAccount(ctx, accountID any) *gomock
 }
 
 // Greet mocks base method.
-func (m *MockPismoService) Greet(ctx context.Context) string {
+func (m *MockPismoService) Greet(ctx context.Context) (any, *services.ServiceError) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Greet", ctx)
-	ret0, _ := ret[0].(string)
-	return ret0
+	ret0, _ := ret[0].(any)
+	ret1, _ := ret[1].(*services.ServiceError)
+	return ret0, ret1
 }
 
 // Greet indicates an expected call of Greet.

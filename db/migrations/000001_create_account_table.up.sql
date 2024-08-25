@@ -1,6 +1,6 @@
-CREATE TABLE account (
-  id SERIAL PRIMARY KEY,
-  account_number VARCHAR(20) NOT NULL,
-  account_holder VARCHAR(100) NOT NULL,
-  balance DECIMAL(10, 2) NOT NULL DEFAULT 0.00
+CREATE TABLE accounts (
+                          id  SERIAL PRIMARY KEY,
+                          document_number VARCHAR(255) NOT NULL,
+                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

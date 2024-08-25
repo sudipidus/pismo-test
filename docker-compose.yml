@@ -6,6 +6,7 @@ services:
       POSTGRES_USER: pismo-user
       POSTGRES_PASSWORD: pismo-secret
       POSTGRES_DB: pismo
+      POSTGRES_EXTENSIONS: uuid-ossp
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:

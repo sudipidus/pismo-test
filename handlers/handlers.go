@@ -3,10 +3,13 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/sudipidus/pismo-test/db"
+	"github.com/sudipidus/pismo-test/serviceErrors"
 	"net/http"
 
 	"github.com/go-playground/validator"
 	"github.com/gorilla/mux"
+	"github.com/sudipidus/pismo-test/logger"
 	"github.com/sudipidus/pismo-test/services"
 )
 
@@ -37,20 +40,40 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 // @Success 201 {string} string
 // @Router /accounts [post]
 func AccountsHandler(w http.ResponseWriter, r *http.Request) {
-	var req CreateAccountRequest
-	err := json.NewDecoder(r.Body).Decode(&req)
+	logger.GetLogger().Info("creating account")
+	var createAccountRequest services.CreateAccountRequest
+	err := json.NewDecoder(r.Body).Decode(&createAccountRequest)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 	validate := validator.New()
-	err = validate.Struct(req)
+	err = validate.Struct(createAccountRequest)
 	if err != nil {
 		errors := err.(validator.ValidationErrors)
 		http.Error(w, fmt.Sprintf("Validation error: %s", errors), http.StatusBadRequest)
 		return
 	}
-	fmt.Fprint(w, "Account has been created with document number: "+req.DocumentNumber)
+	response, serviceErr := services.NewPismoService(db.GetStorage()).CreateAccount(r.Context(), createAccountRequest)
+	if serviceErr != nil {
+		translateErrorAndReturn(w, serviceErr)
+		return
+	}
+
+	json.NewEncoder(w).Encode(Response{
+		Data:    response,
+		Success: true,
+	})
+}
+
+func translateErrorAndReturn(w http.ResponseWriter, err *serviceErrors.ServiceError) {
+	if err.Code == "internal-error" {
+		w.WriteHeader(http.StatusInternalServerError)
+	} else if err.Code == "bad-request" {
+		w.WriteHeader(http.StatusBadRequest)
+	} else {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
 }
 
 // @Summary Get an account by ID
@@ -64,7 +87,16 @@ func AccountsHandler(w http.ResponseWriter, r *http.Request) {
 func GetAccountsHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["accountID"]
-	fmt.Fprintf(w, "Account with ID %s", id)
+	response, serviceErr := services.NewPismoService(db.GetStorage()).FetchAccount(r.Context(), id)
+	if serviceErr != nil {
+		translateErrorAndReturn(w, serviceErr)
+		return
+	}
+
+	json.NewEncoder(w).Encode(Response{
+		Data:    response,
+		Success: true,
+	})
 }
 
 // @Summary Create a new transaction
@@ -76,7 +108,7 @@ func GetAccountsHandler(w http.ResponseWriter, r *http.Request) {
 // @Success 201 {string} string
 // @Router /transactions [post]
 func TransactionHandler(w http.ResponseWriter, r *http.Request) {
-	var req CreateTransactionRequest
+	var req services.CreateTransactionRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -90,15 +122,15 @@ func TransactionHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("Validation error: %s", errors), http.StatusBadRequest)
 		return
 	}
+	//dsn := "postgres://pismo-user:pismo-secret@localhost:5433/pismo?sslmode=disable"
+	//postgresStorage, err := storage.NewPostgresStorage(dsn)
+	//service := services.NewPismoService(postgresStorage)
+	//service.CreateAccount(r.Context(), nil)
 	fmt.Fprint(w, "new transaction created")
 }
 
-type CreateAccountRequest struct {
-	DocumentNumber string `json:"document_number" example:"1234567890" validate:"required"`
-}
-
-type CreateTransactionRequest struct {
-	AccountID       int     `json:"account_id" validate:"required" example:"1"`
-	OperationTypeID int     `json:"operation_type_id" validate:"required" example:"4"`
-	Amount          float64 `json:"amount" validate:"required" example:"123.45"`
+type Response struct {
+	Data    interface{} `json:"data,omitempty"`
+	Success bool        `json:"success"`
+	Error   string      `json:"error,omitempty"`
 }

@@ -1,1 +1,1 @@
-drop TABLE operation_type
+drop TABLE operation_types
