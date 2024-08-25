@@ -68,17 +68,17 @@ func (mr *MockPismoServiceMockRecorder) CreateTransaction(ctx any) *gomock.Call 
 }
 
 // FetchAccount mocks base method.
-func (m *MockPismoService) FetchAccount(ctx context.Context) string {
+func (m *MockPismoService) FetchAccount(ctx context.Context, accountID string) string {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "FetchAccount", ctx)
+	ret := m.ctrl.Call(m, "FetchAccount", ctx, accountID)
 	ret0, _ := ret[0].(string)
 	return ret0
 }
 
 // FetchAccount indicates an expected call of FetchAccount.
-func (mr *MockPismoServiceMockRecorder) FetchAccount(ctx any) *gomock.Call {
+func (mr *MockPismoServiceMockRecorder) FetchAccount(ctx, accountID any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FetchAccount", reflect.TypeOf((*MockPismoService)(nil).FetchAccount), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FetchAccount", reflect.TypeOf((*MockPismoService)(nil).FetchAccount), ctx, accountID)
 }
 
 // Greet mocks base method.

@@ -1,7 +1,19 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "This is a simplified transaction service.",
+        "title": "Pismo Transaction Service - Demo",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Sudip Bhandari",
+            "url": "https://sudipidus.github.io",
+            "email": "sudip.post@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
     },
     "paths": {
         "/": {
@@ -14,7 +26,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "root"
+                    "greeting/health-check"
                 ],
                 "summary": "Greetings from Pismo-Test",
                 "responses": {
@@ -40,6 +52,17 @@
                     "accounts"
                 ],
                 "summary": "Create a new account",
+                "parameters": [
+                    {
+                        "description": "Create Account Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.CreateAccountRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "201": {
                         "description": "Created",
@@ -95,6 +118,17 @@
                     "transactions"
                 ],
                 "summary": "Create a new transaction",
+                "parameters": [
+                    {
+                        "description": "Create Transaction Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handlers.CreateTransactionRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "201": {
                         "description": "Created",
@@ -102,6 +136,42 @@
                             "type": "string"
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "handlers.CreateAccountRequest": {
+            "type": "object",
+            "required": [
+                "document_number"
+            ],
+            "properties": {
+                "document_number": {
+                    "type": "string",
+                    "example": "1234567890"
+                }
+            }
+        },
+        "handlers.CreateTransactionRequest": {
+            "type": "object",
+            "required": [
+                "account_id",
+                "amount",
+                "operation_type_id"
+            ],
+            "properties": {
+                "account_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "amount": {
+                    "type": "number",
+                    "example": 123.45
+                },
+                "operation_type_id": {
+                    "type": "integer",
+                    "example": 4
                 }
             }
         }

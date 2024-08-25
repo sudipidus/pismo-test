@@ -1,5 +1,40 @@
+definitions:
+  handlers.CreateAccountRequest:
+    properties:
+      document_number:
+        example: "1234567890"
+        type: string
+    required:
+    - document_number
+    type: object
+  handlers.CreateTransactionRequest:
+    properties:
+      account_id:
+        example: 1
+        type: integer
+      amount:
+        example: 123.45
+        type: number
+      operation_type_id:
+        example: 4
+        type: integer
+    required:
+    - account_id
+    - amount
+    - operation_type_id
+    type: object
 info:
-  contact: {}
+  contact:
+    email: sudip.post@gmail.com
+    name: Sudip Bhandari
+    url: https://sudipidus.github.io
+  description: This is a simplified transaction service.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Pismo Transaction Service - Demo
+  version: "1.0"
 paths:
   /:
     get:
@@ -15,12 +50,19 @@ paths:
             type: string
       summary: Greetings from Pismo-Test
       tags:
-      - root
+      - greeting/health-check
   /accounts:
     post:
       consumes:
       - application/json
       description: Create a new account
+      parameters:
+      - description: Create Account Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateAccountRequest'
       produces:
       - application/json
       responses:
@@ -57,6 +99,13 @@ paths:
       consumes:
       - application/json
       description: Create a new transaction
+      parameters:
+      - description: Create Transaction Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateTransactionRequest'
       produces:
       - application/json
       responses:

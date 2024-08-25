@@ -12,6 +12,18 @@ import (
 	_ "github.com/swaggo/http-swagger/example/gorilla/docs"
 )
 
+// @title Pismo Transaction Service - Demo
+// @version 1.0
+// @description This is a simplified transaction service.
+// @termsOfService http://swagger.io/terms/
+
+// @contact.name Sudip Bhandari
+// @contact.url https://sudipidus.github.io
+// @contact.email sudip.post@gmail.com
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
 func main() {
 
 	r := mux.NewRouter()

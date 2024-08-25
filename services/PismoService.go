@@ -6,24 +6,24 @@ import "context"
 type PismoService interface {
 	Greet(ctx context.Context) string
 	CreateAccount(ctx context.Context) string
-	FetchAccount(ctx context.Context) string
+	FetchAccount(ctx context.Context, accountID string) string
 	CreateTransaction(ctx context.Context) string
 }
 
-type pismoServiceImpl struct{}
+type PismoServiceImpl struct{}
 
-func (s *pismoServiceImpl) Greet(ctx context.Context) string {
+func (s *PismoServiceImpl) Greet(ctx context.Context) string {
 	return "Greetings from Pismo-Test"
 }
 
-func (s *pismoServiceImpl) CreateAccount(ctx context.Context) string {
+func (s *PismoServiceImpl) CreateAccount(ctx context.Context) string {
 	return "Account has been created"
 }
 
-func (s *pismoServiceImpl) GetAccountByID(ctx context.Context, accountID string) string {
+func (s *PismoServiceImpl) FetchAccount(ctx context.Context, accountID string) string {
 	return "account fetched"
 }
 
-func (s *pismoServiceImpl) CreateTransaction(ctx context.Context) string {
+func (s *PismoServiceImpl) CreateTransaction(ctx context.Context) string {
 	return "new transaction created"
 }
