@@ -13,6 +13,8 @@ import (
 	context "context"
 	reflect "reflect"
 
+	errors "github.com/sudipidus/pismo-test/errors"
+	models "github.com/sudipidus/pismo-test/models"
 	services "github.com/sudipidus/pismo-test/services"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -41,11 +43,11 @@ func (m *MockPismoService) EXPECT() *MockPismoServiceMockRecorder {
 }
 
 // CreateAccount mocks base method.
-func (m *MockPismoService) CreateAccount(ctx context.Context, request services.CreateAccountRequest) (any, *services.ServiceError) {
+func (m *MockPismoService) CreateAccount(ctx context.Context, request services.CreateAccountRequest) (*models.Account, *errors.Error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateAccount", ctx, request)
-	ret0, _ := ret[0].(any)
-	ret1, _ := ret[1].(*services.ServiceError)
+	ret0, _ := ret[0].(*models.Account)
+	ret1, _ := ret[1].(*errors.Error)
 	return ret0, ret1
 }
 
@@ -56,26 +58,26 @@ func (mr *MockPismoServiceMockRecorder) CreateAccount(ctx, request any) *gomock.
 }
 
 // CreateTransaction mocks base method.
-func (m *MockPismoService) CreateTransaction(ctx context.Context) (any, *services.ServiceError) {
+func (m *MockPismoService) CreateTransaction(ctx context.Context, request services.CreateTransactionRequest) (*models.Transaction, *errors.Error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateTransaction", ctx)
-	ret0, _ := ret[0].(any)
-	ret1, _ := ret[1].(*services.ServiceError)
+	ret := m.ctrl.Call(m, "CreateTransaction", ctx, request)
+	ret0, _ := ret[0].(*models.Transaction)
+	ret1, _ := ret[1].(*errors.Error)
 	return ret0, ret1
 }
 
 // CreateTransaction indicates an expected call of CreateTransaction.
-func (mr *MockPismoServiceMockRecorder) CreateTransaction(ctx any) *gomock.Call {
+func (mr *MockPismoServiceMockRecorder) CreateTransaction(ctx, request any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTransaction", reflect.TypeOf((*MockPismoService)(nil).CreateTransaction), ctx)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTransaction", reflect.TypeOf((*MockPismoService)(nil).CreateTransaction), ctx, request)
 }
 
 // FetchAccount mocks base method.
-func (m *MockPismoService) FetchAccount(ctx context.Context, accountID string) (any, *services.ServiceError) {
+func (m *MockPismoService) FetchAccount(ctx context.Context, accountID string) (*models.Account, *errors.Error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FetchAccount", ctx, accountID)
-	ret0, _ := ret[0].(any)
-	ret1, _ := ret[1].(*services.ServiceError)
+	ret0, _ := ret[0].(*models.Account)
+	ret1, _ := ret[1].(*errors.Error)
 	return ret0, ret1
 }
 
@@ -86,11 +88,11 @@ func (mr *MockPismoServiceMockRecorder) FetchAccount(ctx, accountID any) *gomock
 }
 
 // Greet mocks base method.
-func (m *MockPismoService) Greet(ctx context.Context) (any, *services.ServiceError) {
+func (m *MockPismoService) Greet(ctx context.Context) (any, *errors.Error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Greet", ctx)
 	ret0, _ := ret[0].(any)
-	ret1, _ := ret[1].(*services.ServiceError)
+	ret1, _ := ret[1].(*errors.Error)
 	return ret0, ret1
 }
 

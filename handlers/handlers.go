@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/sudipidus/pismo-test/db"
-	"github.com/sudipidus/pismo-test/serviceErrors"
+	"github.com/sudipidus/pismo-test/errors"
 	"net/http"
 
 	"github.com/go-playground/validator"
@@ -66,10 +66,10 @@ func AccountsHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func translateErrorAndReturn(w http.ResponseWriter, err *serviceErrors.ServiceError) {
-	if err.Code == "internal-error" {
+func translateErrorAndReturn(w http.ResponseWriter, err *errors.Error) {
+	if err.Code >= 500 {
 		w.WriteHeader(http.StatusInternalServerError)
-	} else if err.Code == "bad-request" {
+	} else if err.Code >= 400 && err.Code < 500 {
 		w.WriteHeader(http.StatusBadRequest)
 	} else {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -108,25 +108,30 @@ func GetAccountsHandler(w http.ResponseWriter, r *http.Request) {
 // @Success 201 {string} string
 // @Router /transactions [post]
 func TransactionHandler(w http.ResponseWriter, r *http.Request) {
-	var req services.CreateTransactionRequest
-	err := json.NewDecoder(r.Body).Decode(&req)
+	var createTransactionRequest services.CreateTransactionRequest
+	err := json.NewDecoder(r.Body).Decode(&createTransactionRequest)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 	validate := validator.New()
-	err = validate.Struct(req)
+	err = validate.Struct(createTransactionRequest)
 	if err != nil {
-		// Validation failed, handle the error
 		errors := err.(validator.ValidationErrors)
 		http.Error(w, fmt.Sprintf("Validation error: %s", errors), http.StatusBadRequest)
 		return
 	}
-	//dsn := "postgres://pismo-user:pismo-secret@localhost:5433/pismo?sslmode=disable"
-	//postgresStorage, err := storage.NewPostgresStorage(dsn)
-	//service := services.NewPismoService(postgresStorage)
-	//service.CreateAccount(r.Context(), nil)
-	fmt.Fprint(w, "new transaction created")
+
+	response, serviceErr := services.NewPismoService(db.GetStorage()).CreateTransaction(r.Context(), createTransactionRequest)
+	if serviceErr != nil {
+		translateErrorAndReturn(w, serviceErr)
+		return
+	}
+
+	json.NewEncoder(w).Encode(Response{
+		Data:    response,
+		Success: true,
+	})
 }
 
 type Response struct {

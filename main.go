@@ -35,9 +35,11 @@ func main() {
 
 	db.Init()
 
+	db.SeedOperationType(db.GetStorage())
+
 	// Load environment variables from .env file
 	if err := godotenv.Load(); err != nil {
-		log.Fatalf("WrappedError loading .env file: %v", err)
+		log.Fatalf("Err loading .env file: %v", err)
 	}
 
 	r := mux.NewRouter()

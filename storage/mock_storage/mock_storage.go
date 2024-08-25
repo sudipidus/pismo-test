@@ -13,6 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
+	errors "github.com/sudipidus/pismo-test/errors"
 	models "github.com/sudipidus/pismo-test/models"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -41,11 +42,11 @@ func (m *MockStorage) EXPECT() *MockStorageMockRecorder {
 }
 
 // CreateAccount mocks base method.
-func (m *MockStorage) CreateAccount(context context.Context, account *models.Account) (*models.Account, error) {
+func (m *MockStorage) CreateAccount(context context.Context, account *models.Account) (*models.Account, *errors.Error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateAccount", context, account)
 	ret0, _ := ret[0].(*models.Account)
-	ret1, _ := ret[1].(error)
+	ret1, _ := ret[1].(*errors.Error)
 	return ret0, ret1
 }
 
@@ -55,12 +56,27 @@ func (mr *MockStorageMockRecorder) CreateAccount(context, account any) *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateAccount", reflect.TypeOf((*MockStorage)(nil).CreateAccount), context, account)
 }
 
+// CreateTransaction mocks base method.
+func (m *MockStorage) CreateTransaction(ctx context.Context, transaction *models.Transaction) (*models.Transaction, *errors.Error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateTransaction", ctx, transaction)
+	ret0, _ := ret[0].(*models.Transaction)
+	ret1, _ := ret[1].(*errors.Error)
+	return ret0, ret1
+}
+
+// CreateTransaction indicates an expected call of CreateTransaction.
+func (mr *MockStorageMockRecorder) CreateTransaction(ctx, transaction any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTransaction", reflect.TypeOf((*MockStorage)(nil).CreateTransaction), ctx, transaction)
+}
+
 // FetchAccount mocks base method.
-func (m *MockStorage) FetchAccount(ctx context.Context, accountID string) (*models.Account, error) {
+func (m *MockStorage) FetchAccount(ctx context.Context, accountID string) (*models.Account, *errors.Error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FetchAccount", ctx, accountID)
 	ret0, _ := ret[0].(*models.Account)
-	ret1, _ := ret[1].(error)
+	ret1, _ := ret[1].(*errors.Error)
 	return ret0, ret1
 }
 
@@ -68,4 +84,19 @@ func (m *MockStorage) FetchAccount(ctx context.Context, accountID string) (*mode
 func (mr *MockStorageMockRecorder) FetchAccount(ctx, accountID any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FetchAccount", reflect.TypeOf((*MockStorage)(nil).FetchAccount), ctx, accountID)
+}
+
+// SeedOperationType mocks base method.
+func (m *MockStorage) SeedOperationType(ctx context.Context, operationTypes []models.OperationType) (*[]models.OperationType, *errors.Error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SeedOperationType", ctx, operationTypes)
+	ret0, _ := ret[0].(*[]models.OperationType)
+	ret1, _ := ret[1].(*errors.Error)
+	return ret0, ret1
+}
+
+// SeedOperationType indicates an expected call of SeedOperationType.
+func (mr *MockStorageMockRecorder) SeedOperationType(ctx, operationTypes any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SeedOperationType", reflect.TypeOf((*MockStorage)(nil).SeedOperationType), ctx, operationTypes)
 }

@@ -8,6 +8,6 @@ import (
 // Init initializes environment variables
 func Init() {
 	if err := godotenv.Load(); err != nil {
-		log.Fatalf("WrappedError loading .env file: %v", err)
+		log.Fatalf("Err loading .env file: %v", err)
 	}
 }
