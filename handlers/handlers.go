@@ -7,6 +7,12 @@ import (
 	"github.com/gorilla/mux"
 )
 
+var pismo PismoService
+
+func init() {
+
+}
+
 // @Summary Greetings from Pismo-Test
 // @Description Greetings from Pismo-Test
 // @Tags root
@@ -15,7 +21,7 @@ import (
 // @Success 200 {string} string
 // @Router / [get]
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Greetings from Pismo-Test")
+	fmt.Fprint(w, "Greetings")
 }
 
 // @Summary Create a new account

@@ -1,3 +1,15 @@
+include these in a startup script
+
+- start infra (docker-compose up)
+- run migrations 
+- start the app (go run ./...)
+
+Uses:
+- gomock by uber (google's fork is no longer maintained) go install go.uber.org/mock/mockgen@latest
+- run this to generate mocks (`go generate ./...`) to make sure mocks are upto date during compile time
+- swag for openAPI spec generation, http-swagger for serving documentation
+
+
 ### migration
 - migrate -database "postgres://pismo-user:pismo-secret@localhost:5433/pismo?sslmode=disable"  -path db/migrations  up
 

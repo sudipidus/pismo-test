@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/jmoiron/sqlx"
 
 	"github.com/sudipidus/pismo-test/routes"
 	httpSwagger "github.com/swaggo/http-swagger"
@@ -14,11 +13,6 @@ import (
 )
 
 func main() {
-
-	db, err := sqlx.Connect("postgres", "pismo-user:pismo-secret@localhost:5435/pismo")
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	r := mux.NewRouter()
 
