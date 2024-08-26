@@ -25,6 +25,38 @@ services:
     ports:
       - "5434:5432"
 
+  app:
+    build: .
+    container_name: pismo-app
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: pismo-user
+      DB_PASSWORD: pismo-secret
+      DB_NAME: pismo
+      DB_DSN: "postgres://pismo-user:pismo-secret@db:5432/pismo?sslmode=disable"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+      - migrate
+
+
+  migrate:
+    build: .
+#    command: migrate -database "postgres://pismo-user:pismo-secret@db:5432/pismo?sslmode=disable" -path db/migrations up
+    command:
+      - sh
+      - -c
+      - |
+        apk add --no-cache --virtual .build-deps gcc libc-dev musl-dev go git
+        go get -u github.com/golang-migrate/migrate/v4/cmd/migrate
+        go install -v github.com/golang-migrate/migrate/v4/cmd/migrate
+        migrate -database "postgres://pismo-user:pismo-secret@db:5432/pismo?sslmode=disable" -path db/migrations up
+        apk del .build-deps
+    depends_on:
+      - db
+
 volumes:
   db_data:
     driver: local

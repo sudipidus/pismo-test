@@ -100,6 +100,70 @@ func TestPismoServiceImpl_FetchAccount(t *testing.T) {
 	})
 }
 
+func TestPismoServiceImpl_CreateTransaction(t *testing.T) {
+	t.Run("service should successfully create and return a transaction if the storage layer succeeds in creating the transaction", func(t *testing.T) {
+		logger.InitLogger()
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		transaction := &models.Transaction{
+			AccountID:       1,
+			OperationTypeID: 1,
+			Amount:          10,
+		}
+
+		mockStorage := mock_storage.NewMockStorage(ctrl)
+		mockStorage.EXPECT().CreateTransaction(context.Background(), &transactionMatcher{expected: transaction}).
+			Return(&models.Transaction{
+				AccountID:       1,
+				OperationTypeID: 1,
+				Amount:          10,
+			}, nil)
+
+		service := services.NewPismoService(mockStorage)
+		response, err := service.CreateTransaction(context.Background(), services.CreateTransactionRequest{
+			AccountID:       1,
+			OperationTypeID: 1,
+			Amount:          10,
+		})
+		assert.Nil(t, err)
+		assert.NotEmpty(t, response)
+		assert.Equal(t, transaction.Amount, response.Amount)
+		assert.Equal(t, transaction.OperationTypeID, response.OperationTypeID)
+		assert.Equal(t, transaction.Amount, response.Amount)
+	})
+
+	t.Run("service should return error if the storage layer errors out", func(t *testing.T) {
+		logger.InitLogger()
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		transaction := &models.Transaction{
+			AccountID:       1,
+			OperationTypeID: 1,
+			Amount:          10,
+		}
+
+		mockStorage := mock_storage.NewMockStorage(ctrl)
+		mockStorage.EXPECT().CreateTransaction(context.Background(), &transactionMatcher{expected: transaction}).
+			Return(nil, &errors.Error{
+				Err:     errors2.New("failed to create entry"),
+				Code:    500,
+				Message: "failed to create entry",
+			})
+
+		service := services.NewPismoService(mockStorage)
+		response, err := service.CreateTransaction(context.Background(), services.CreateTransactionRequest{
+			AccountID:       1,
+			OperationTypeID: 1,
+			Amount:          10,
+		})
+		assert.Empty(t, response)
+		assert.Equal(t, err.Error(), "failed to create entry")
+		assert.Equal(t, err.Code, 500)
+	})
+}
+
 type accountMatcher struct {
 	expected *models.Account
 }
@@ -114,4 +178,22 @@ func (m *accountMatcher) Matches(x interface{}) bool {
 
 func (m *accountMatcher) String() string {
 	return "matches account with specified DocumentNumber"
+}
+
+type transactionMatcher struct {
+	expected *models.Transaction
+}
+
+func (m *transactionMatcher) Matches(x interface{}) bool {
+	transaction, ok := x.(*models.Transaction)
+	if !ok {
+		return false
+	}
+	return transaction.AccountID == m.expected.AccountID &&
+		transaction.Amount == m.expected.Amount &&
+		transaction.OperationTypeID == m.expected.OperationTypeID
+}
+
+func (m *transactionMatcher) String() string {
+	return "matches account with specified accountID, amount and operationTypeID"
 }
