@@ -12,6 +12,22 @@ services:
     ports:
       - "5433:5432"
 
+  test_db:
+    image: postgres:13
+    container_name: pismo-postgres-test
+    environment:
+      POSTGRES_USER: pismo-user-test
+      POSTGRES_PASSWORD: pismo-secret-test
+      POSTGRES_DB: pismo-test
+      POSTGRES_EXTENSIONS: uuid-ossp
+    volumes:
+      - db_data_test:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+
 volumes:
   db_data:
     driver: local
+  db_data_test:
+    driver: local
+
