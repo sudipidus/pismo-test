@@ -6,6 +6,6 @@ type CreateAccountRequest struct {
 
 type CreateTransactionRequest struct {
 	AccountID       int     `json:"account_id" validate:"required" example:"1"`
-	OperationTypeID int     `json:"operation_type_id" validate:"required" example:"4"`
+	OperationTypeID int     `json:"operation_type_id" validate:"required,oneof=1 2 3 4" example:"4"`
 	Amount          float64 `json:"amount" validate:"required" example:"123.45"`
 }
