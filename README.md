@@ -9,6 +9,7 @@ Dependencies:
 6. godotevn for env management `github.com/joho/godotenv`
 
 #### Starting Up
+tldr -> run the start script `sh start.sh`
 1. Clone the repo
 2. Install go1.23 (use a version manager like gvm: `gvm install go1.23 && gvm use go1.23`)
 3. Download the dependencies (`go mod download`)
@@ -16,6 +17,8 @@ Dependencies:
 5. Start the dependencies `docker compose up db`
 6. Start the app `go run ./...`
 7. Access the swagger UI `http://localhost:8080/swagger/index.html`
+
+![swagger-ui](swagger-ui.png)
 
 #### Dockerized Way
 `docker compose up`
