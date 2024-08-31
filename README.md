@@ -1,4 +1,5 @@
 [![Lint](https://github.com/sudipidus/pismo-test/actions/workflows/golanci-lint.yml/badge.svg?branch=master)](https://github.com/sudipidus/pismo-test/actions/workflows/golanci-lint.yml)
+[![CodeQL](https://github.com/sudipidus/pismo-test/actions/workflows/codeql.yml/badge.svg)](https://github.com/sudipidus/pismo-test/actions/workflows/codeql.yml)
 
 ### Pismo Transaction Service Demo
 
