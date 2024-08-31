@@ -155,6 +155,7 @@ func (ps *PostgresStorage) SeedOperationType(ctx context.Context, operationTypes
 		_, err := tx.Exec(`
 			INSERT INTO operation_types (id,type, description, is_credit, created_at, updated_at)
 			VALUES ($1, $2, $3, $4, $5,$6)
+			ON CONFLICT (id) DO NOTHING;
 		`, opType.ID, opType.Type, opType.Description, opType.IsCredit, time.Now(), time.Now())
 		if err != nil {
 			log.Fatal(err)
