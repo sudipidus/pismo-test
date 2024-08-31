@@ -1,5 +1,8 @@
 ### Pismo Transaction Service Demo
 
+For a quick spin:
+Run `docker compose up` and head over to swagger link
+
 Dependencies:
 1. go1.23
 2. golang-migrate for schema migration `github.com/golang-migrate/migrate/v4/cmd/migrate`
