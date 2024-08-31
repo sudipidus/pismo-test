@@ -1,3 +1,5 @@
+[![Lint](https://github.com/sudipidus/pismo-test/actions/workflows/golanci-lint.yml/badge.svg?branch=master)](https://github.com/sudipidus/pismo-test/actions/workflows/golanci-lint.yml)
+
 ### Pismo Transaction Service Demo
 
 For a quick spin:
