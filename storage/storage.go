@@ -149,16 +149,8 @@ func (ps *PostgresStorage) SeedOperationType(ctx context.Context, operationTypes
 	for _, opType := range operationTypes {
 		_, err := tx.Exec(`
 			INSERT INTO operation_types (id,type, description, is_credit, created_at, updated_at)
-			VALUES (:id, :type, :description, :is_credit, :created_at, :updated_at)
-			ON CONFLICT (id) DO NOTHING;
-		`, map[string]interface{}{
-			"id":          opType.ID,
-			"type":        opType.Type,
-			"description": opType.Description,
-			"is_credit":   opType.IsCredit,
-			"created_at":  time.Now(),
-			"updated_at":  time.Now(),
-		})
+			VALUES ($1, $2, $3, $4, $5,$6)
+		`, opType.ID, opType.Type, opType.Description, opType.IsCredit, time.Now(), time.Now())
 		if err != nil {
 			log.Fatal(err)
 		}
