@@ -4,17 +4,20 @@ import (
 	"bytes"
 	"encoding/json"
 	"github.com/gorilla/mux"
+	"github.com/sudipidus/pismo-test/db"
 	"github.com/sudipidus/pismo-test/handlers"
+	"github.com/sudipidus/pismo-test/logger"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 )
 
-//func init() {
-//	logger.InitLogger()
-//	os.Setenv("DB_DSN", "postgres://pismo-user:pismo-secret@db-test:5433/pismo?sslmode=disable")
-//	db.Init()
-//}
+func init() {
+	logger.InitLogger()
+	os.Setenv("DB_DSN", "postgres://pismo-user:pismo-secret@db-test:5433/pismo?sslmode=disable")
+	db.Init()
+}
 
 func TestHomeHandler(t *testing.T) {
 	req, err := http.NewRequest("GET", "/", nil)
