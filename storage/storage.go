@@ -29,6 +29,11 @@ type InMemoryStorage struct {
 
 func NewPostgresStorage(dsn string) (*PostgresStorage, *errors.Error) {
 	db, err := sqlx.Connect("postgres", dsn)
+	
+	//Connection pooling
+	db.SetMaxOpenConns(1000) // The default is 0 (unlimited)
+	db.SetMaxIdleConns(10) // defaultMaxIdleConns = 2
+	db.SetConnMaxLifetime(0) // 0, connections are reused forever.
 	if err != nil {
 		return nil, errors.NewError(500, "DB Setup Failed", err)
 	}
