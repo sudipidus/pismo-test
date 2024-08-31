@@ -3,13 +3,13 @@ package services_test
 import (
 	"context"
 	errors2 "errors"
+	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/sudipidus/pismo-test/errors"
 	"github.com/sudipidus/pismo-test/logger"
 	"github.com/sudipidus/pismo-test/models"
 	"github.com/sudipidus/pismo-test/services"
 	"github.com/sudipidus/pismo-test/storage/mock_storage"
-	"go.uber.org/mock/gomock"
 	"testing"
 )
 

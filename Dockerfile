@@ -1,16 +1,24 @@
-FROM golang:alpine
+FROM golang:alpine AS builder
 
 WORKDIR /app
 
-
-COPY go.mod go.sum ./
+COPY . .
 
 RUN go mod download
 
-COPY . .
 
-RUN go build -o main main.go
+RUN go build -o pismo main.go
+
+FROM scratch
+
+COPY --from=builder /app/pismo /app/pismo
+COPY --from=builder /app/.env /app/.env
+COPY --from=builder /app/db/migrations/ /app/db/migrations
+
+WORKDIR /app
 
 EXPOSE 8080
 
-CMD ["./main"]
+CMD ["./pismo"]
+
+

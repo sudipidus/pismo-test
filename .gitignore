@@ -41,3 +41,12 @@ Thumbs.db
 
 # Configuration files
 .env
+
+# file for my local task manager
+taskchampion.sqlite3
+
+tmp/
+
+pismo-test
+
+.idea/

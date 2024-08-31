@@ -1,6 +1,7 @@
 package services
 
 type CreateAccountRequest struct {
+	//todo: add more validation
 	DocumentNumber string `json:"document_number" example:"1234567890" validate:"required"`
 }
 

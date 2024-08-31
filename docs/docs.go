@@ -67,7 +67,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.CreateAccountRequest"
+                            "$ref": "#/definitions/services.CreateAccountRequest"
                         }
                     }
                 ],
@@ -133,7 +133,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handlers.CreateTransactionRequest"
+                            "$ref": "#/definitions/services.CreateTransactionRequest"
                         }
                     }
                 ],
@@ -149,19 +149,20 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "handlers.CreateAccountRequest": {
+        "services.CreateAccountRequest": {
             "type": "object",
             "required": [
                 "document_number"
             ],
             "properties": {
                 "document_number": {
+                    "description": "todo: add more validation",
                     "type": "string",
                     "example": "1234567890"
                 }
             }
         },
-        "handlers.CreateTransactionRequest": {
+        "services.CreateTransactionRequest": {
             "type": "object",
             "required": [
                 "account_id",
@@ -179,6 +180,12 @@ const docTemplate = `{
                 },
                 "operation_type_id": {
                     "type": "integer",
+                    "enum": [
+                        1,
+                        2,
+                        3,
+                        4
+                    ],
                     "example": 4
                 }
             }

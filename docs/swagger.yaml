@@ -1,13 +1,14 @@
 definitions:
-  handlers.CreateAccountRequest:
+  services.CreateAccountRequest:
     properties:
       document_number:
+        description: 'todo: add more validation'
         example: "1234567890"
         type: string
     required:
     - document_number
     type: object
-  handlers.CreateTransactionRequest:
+  services.CreateTransactionRequest:
     properties:
       account_id:
         example: 1
@@ -16,6 +17,11 @@ definitions:
         example: 123.45
         type: number
       operation_type_id:
+        enum:
+        - 1
+        - 2
+        - 3
+        - 4
         example: 4
         type: integer
     required:
@@ -62,7 +68,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/handlers.CreateAccountRequest'
+          $ref: '#/definitions/services.CreateAccountRequest'
       produces:
       - application/json
       responses:
@@ -105,7 +111,7 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/handlers.CreateTransactionRequest'
+          $ref: '#/definitions/services.CreateTransactionRequest'
       produces:
       - application/json
       responses:

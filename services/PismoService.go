@@ -60,6 +60,8 @@ func (s *PismoServiceImpl) CreateTransaction(ctx context.Context, request Create
 		AccountID:       request.AccountID,
 		Amount:          request.Amount,
 		OperationTypeID: request.OperationTypeID,
+		CreatedAt:       time.Now(),
+		UpdatedAt:       time.Now(),
 	})
 	if err != nil {
 		return nil, err

@@ -4,20 +4,17 @@ import (
 	"bytes"
 	"encoding/json"
 	"github.com/gorilla/mux"
-	"github.com/sudipidus/pismo-test/db"
 	"github.com/sudipidus/pismo-test/handlers"
-	"github.com/sudipidus/pismo-test/logger"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"testing"
 )
 
-func init() {
-	logger.InitLogger()
-	os.Setenv("DB_DSN", "postgres://pismo-user:pismo-secret@127.0.0.1:5433/pismo?sslmode=disable")
-	db.Init()
-}
+//func init() {
+//	logger.InitLogger()
+//	os.Setenv("DB_DSN", "postgres://pismo-user:pismo-secret@db-test:5433/pismo?sslmode=disable")
+//	db.Init()
+//}
 
 func TestHomeHandler(t *testing.T) {
 	req, err := http.NewRequest("GET", "/", nil)
@@ -29,8 +26,8 @@ func TestHomeHandler(t *testing.T) {
 	if w.Code != http.StatusOK {
 		t.Errorf("expected status code %d, got %d", http.StatusOK, w.Code)
 	}
-	if w.Body.String() != "Greetings" {
-		t.Errorf("expected response body 'Greetings', got %s", w.Body.String())
+	if w.Body.String() != "Greetings from pismo test" {
+		t.Errorf("expected response body 'Greetings from pismo test', got %s", w.Body.String())
 	}
 }
 
@@ -75,14 +72,14 @@ func TestAccountsHandler_ValidationError(t *testing.T) {
 
 func TestGetAccountsHandler(t *testing.T) {
 	reqBody := `{"document_number":"1234567890"}`
-	req, err := http.NewRequest("POST", "/accounts", bytes.NewBufferString(reqBody))
+	_, err := http.NewRequest("POST", "/accounts", bytes.NewBufferString(reqBody))
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	//todo: test with the returned ID instead, now since it's serial PK 1 works
 
-	req, err = http.NewRequest("GET", "/accounts/1", nil)
+	req, err := http.NewRequest("GET", "/accounts/1", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -107,14 +104,14 @@ func TestGetAccountsHandler(t *testing.T) {
 
 func TestTransactionHandler(t *testing.T) {
 	reqBody := `{"document_number":"1234567890"}`
-	req, err := http.NewRequest("POST", "/accounts", bytes.NewBufferString(reqBody))
+	_, err := http.NewRequest("POST", "/accounts", bytes.NewBufferString(reqBody))
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	//todo: create transaction with returned account_id
 	reqBody = `{"account_id": 1, "amount": 10.99, "operation_type_id":1}`
-	req, err = http.NewRequest("POST", "/transactions", bytes.NewBufferString(reqBody))
+	req, err := http.NewRequest("POST", "/transactions", bytes.NewBufferString(reqBody))
 	if err != nil {
 		t.Fatal(err)
 	}

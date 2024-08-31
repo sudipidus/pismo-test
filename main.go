@@ -2,19 +2,18 @@ package main
 
 import (
 	"fmt"
+	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 	"github.com/sudipidus/pismo-test/config"
 	"github.com/sudipidus/pismo-test/db"
 	_ "github.com/sudipidus/pismo-test/db"
-	"log"
-	"net/http"
-
-	"github.com/gorilla/mux"
-
 	"github.com/sudipidus/pismo-test/logger"
 	"github.com/sudipidus/pismo-test/routes"
 	httpSwagger "github.com/swaggo/http-swagger"
 	_ "github.com/swaggo/http-swagger/example/gorilla/docs"
+	"log"
+	"net/http"
+	_ "net/http/pprof"
 )
 
 // @title Pismo Transaction Service - Demo
@@ -50,6 +49,9 @@ func main() {
 		http.ServeFile(w, r, "./docs/swagger.json")
 	})
 
+	// need to explicitly map because it's gorilla/mux (blank import registers handlers for native mux)
+	r.PathPrefix("/debug/pprof/").Handler(http.DefaultServeMux)
+
 	r.PathPrefix("/swagger/").Handler(httpSwagger.Handler(
 		httpSwagger.URL("http://localhost:8080/docs/swagger.json"),
 		httpSwagger.DeepLinking(true),
@@ -57,6 +59,6 @@ func main() {
 		httpSwagger.DomID("swagger-ui"),
 	)).Methods(http.MethodGet)
 
-	fmt.Println("Server listening on port 8080")
+	fmt.Println("Server listening on port 8080, visit http://localhost:8080/swagger/index.html")
 	log.Fatal(http.ListenAndServe(":8080", r))
 }

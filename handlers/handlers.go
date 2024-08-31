@@ -13,12 +13,14 @@ import (
 	"github.com/sudipidus/pismo-test/services"
 )
 
-var pismoService services.PismoService
+const ErrorMessageInternalServerError = "Something went wrong"
 
-func init() {
-	pismoService = &services.PismoServiceImpl{}
-
-}
+//var pismoService services.PismoService
+//
+//func init() {
+//	pismoService = &services.PismoServiceImpl{}
+//
+//}
 
 // @Summary Greetings from Pismo-Test
 // @Description Greetings from Pismo-Test
@@ -28,7 +30,7 @@ func init() {
 // @Success 200 {string} string
 // @Router / [get]
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Greetings")
+	fmt.Fprint(w, "Greetings from pismo test")
 }
 
 // @Summary Create a new account
@@ -36,11 +38,13 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 // @Tags accounts
 // @Accept  json
 // @Produce  json
-// @Param   request  body     CreateAccountRequest  true  "Create Account Request"
+// @Param   request  body     services.CreateAccountRequest  true  "Create Account Request"
 // @Success 201 {string} string
 // @Router /accounts [post]
 func AccountsHandler(w http.ResponseWriter, r *http.Request) {
 	logger.GetLogger().Info("creating account")
+	//todo: practice an authentication middleware (also endpoint logging, time it)
+	// todo: validate create account (operation type and amount whether it's positive or negative)
 	var createAccountRequest services.CreateAccountRequest
 	err := json.NewDecoder(r.Body).Decode(&createAccountRequest)
 	if err != nil {
@@ -60,20 +64,15 @@ func AccountsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	json.NewEncoder(w).Encode(Response{
+	if err := json.NewEncoder(w).Encode(Response{
 		Data:    response,
 		Success: true,
-	})
-}
-
-func translateErrorAndReturn(w http.ResponseWriter, err *errors.Error) {
-	if err.Code >= 500 {
-		w.WriteHeader(http.StatusInternalServerError)
-	} else if err.Code >= 400 && err.Code < 500 {
-		w.WriteHeader(http.StatusBadRequest)
-	} else {
-		w.WriteHeader(http.StatusInternalServerError)
+	}); err != nil {
+		// handle the error here
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
+
 }
 
 // @Summary Get an account by ID
@@ -93,17 +92,21 @@ func GetAccountsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	json.NewEncoder(w).Encode(Response{
+	if err := json.NewEncoder(w).Encode(Response{
 		Data:    response,
 		Success: true,
-	})
+	}); err != nil {
+		// handle the error here
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 // @Summary Create a new transaction
 // @Description Create a new transaction
 // @Tags transactions
 // @Accept  json
-// @Param   request  body     CreateTransactionRequest  true  "Create Transaction Request"
+// @Param   request  body     services.CreateTransactionRequest  true  "Create Transaction Request"
 // @Produce  json
 // @Success 201 {string} string
 // @Router /transactions [post]
@@ -124,18 +127,51 @@ func TransactionHandler(w http.ResponseWriter, r *http.Request) {
 
 	response, serviceErr := services.NewPismoService(db.GetStorage()).CreateTransaction(r.Context(), createTransactionRequest)
 	if serviceErr != nil {
+		logger.GetLogger().Error(serviceErr.Error())
 		translateErrorAndReturn(w, serviceErr)
 		return
 	}
 
-	json.NewEncoder(w).Encode(Response{
+	if err := json.NewEncoder(w).Encode(Response{
 		Data:    response,
 		Success: true,
-	})
+	}); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 type Response struct {
 	Data    interface{} `json:"data,omitempty"`
 	Success bool        `json:"success"`
 	Error   string      `json:"error,omitempty"`
+}
+
+type ErrorResponse struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
+
+func translateErrorAndReturn(w http.ResponseWriter, err *errors.Error) {
+	var statusCode int
+	errorMessage := err.Error()
+
+	if err.Code >= 400 && err.Code < 500 {
+		statusCode = http.StatusBadRequest
+	} else {
+		statusCode = http.StatusInternalServerError
+		errorMessage = ErrorMessageInternalServerError
+	}
+
+	w.WriteHeader(statusCode)
+	w.Header().Set("Content-Type", "application/json")
+
+	response := ErrorResponse{
+		Code:    statusCode,
+		Message: errorMessage,
+	}
+
+	// todo: what to suppress and what not to
+	jsonResponse, _ := json.Marshal(response)
+	_, _ = w.Write(jsonResponse)
 }

@@ -1,1 +1,1 @@
-drop TABLE operation_types
+drop TABLE operation_types cascade ;

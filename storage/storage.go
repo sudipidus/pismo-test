@@ -35,12 +35,14 @@ func NewPostgresStorage(dsn string) (*PostgresStorage, *errors.Error) {
 	return &PostgresStorage{db: db}, nil
 }
 
-func NewInMemoryStorage() (*InMemoryStorage, *errors.Error) {
-	return &InMemoryStorage{inmemoryStorage: make(map[interface{}]interface{})}, nil
+func NewInMemoryStorage() *InMemoryStorage {
+	return &InMemoryStorage{inmemoryStorage: make(map[interface{}]interface{})}
 }
 
 func (ps *PostgresStorage) CreateAccount(context context.Context, account *models.Account) (*models.Account, *errors.Error) {
 	var newAccount models.Account
+	//todo: negate amount for debit
+	// todo: timestamps to have proper values
 	query := `
         INSERT INTO accounts (
             document_number,
@@ -71,6 +73,7 @@ func (ps *PostgresStorage) CreateAccount(context context.Context, account *model
 
 func (ps *PostgresStorage) FetchAccount(context context.Context, id string) (*models.Account, *errors.Error) {
 	var account models.Account
+	//todo: fetch by document number or (account nuber & db id are separate, don't tie it)
 	query := `
         SELECT id, document_number, created_at, updated_at
         FROM accounts
@@ -96,6 +99,7 @@ func (ps *PostgresStorage) FetchAccount(context context.Context, id string) (*mo
 
 func (ps *PostgresStorage) CreateTransaction(context context.Context, transaction *models.Transaction) (*models.Transaction, *errors.Error) {
 	var newTransaction models.Transaction
+	//todo: timestamps not set
 	query := `
         INSERT INTO transactions (
             account_id,
@@ -135,13 +139,26 @@ func (ps *PostgresStorage) SeedOperationType(ctx context.Context, operationTypes
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer tx.Rollback()
+	//defer func(tx *sql.Tx) {
+	//	err := tx.Rollback()
+	//	if err != nil {
+	//		logger.GetLogger().Fatal("Failed in rolling back of transaction during seeding of operation data")
+	//	}
+	//}(tx)
 
 	for _, opType := range operationTypes {
 		_, err := tx.Exec(`
-			INSERT INTO operation_types (type, description, is_credit, created_at, updated_at)
-			VALUES ($1, $2, $3, $4, $5)
-		`, opType.Type, opType.Description, opType.IsCredit, time.Now(), time.Now())
+			INSERT INTO operation_types (id,type, description, is_credit, created_at, updated_at)
+			VALUES (:id, :type, :description, :is_credit, :created_at, :updated_at)
+			ON CONFLICT (id) DO NOTHING;
+		`, map[string]interface{}{
+			"id":          opType.ID,
+			"type":        opType.Type,
+			"description": opType.Description,
+			"is_credit":   opType.IsCredit,
+			"created_at":  time.Now(),
+			"updated_at":  time.Now(),
+		})
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -154,8 +171,20 @@ func (ps *PostgresStorage) SeedOperationType(ctx context.Context, operationTypes
 	return nil, nil
 }
 
-func (ms *InMemoryStorage) CreateAccount(context context.Context, account *models.Account) (*models.Account, error) {
+func (ms *InMemoryStorage) CreateAccount(context context.Context, account *models.Account) (*models.Account, *errors.Error) {
 	account.ID = rand.Int()
 	ms.inmemoryStorage[account.DocumentNumber] = account
 	return account, nil
+}
+
+func (ms *InMemoryStorage) FetchAccount(context context.Context, accountID string) (*models.Account, *errors.Error) {
+	return nil, nil
+}
+
+func (ms *InMemoryStorage) CreateTransaction(context context.Context, transaction *models.Transaction) (*models.Transaction, *errors.Error) {
+	return nil, nil
+}
+
+func (ms *InMemoryStorage) SeedOperationType(ctx context.Context, operationTypes []models.OperationType) (*[]models.OperationType, *errors.Error) {
+	return nil, nil
 }
