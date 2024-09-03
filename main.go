@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
@@ -14,6 +15,10 @@ import (
 	"log"
 	"net/http"
 	_ "net/http/pprof"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 )
 
 // @title Pismo Transaction Service - Demo
@@ -49,6 +54,8 @@ func main() {
 		http.ServeFile(w, r, "./docs/swagger.json")
 	})
 
+	r.Use(loggingMiddleware)
+
 	// need to explicitly map because it's gorilla/mux (blank import registers handlers for native mux)
 	r.PathPrefix("/debug/pprof/").Handler(http.DefaultServeMux)
 
@@ -59,6 +66,38 @@ func main() {
 		httpSwagger.DomID("swagger-ui"),
 	)).Methods(http.MethodGet)
 
+	ctx, cancel := context.WithCancel(context.Background())
+	go func() {
+		sigterm := make(chan os.Signal, 1)
+		signal.Notify(sigterm, os.Interrupt, syscall.SIGTERM, syscall.SIGKILL, syscall.SIGINT)
+		<-sigterm
+		logger.GetLogger().Info("Received SIGTERM, shutting down...")
+		cancel()
+	}()
+
+	srv := &http.Server{
+		Addr:    ":8080",
+		Handler: r,
+	}
+
+	go func() {
+		<-ctx.Done()
+		logger.GetLogger().Info("Shutting down server...")
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		srv.Shutdown(ctx)
+	}()
 	fmt.Println("Server listening on port 8080, visit http://localhost:8080/swagger/index.html")
-	log.Fatal(http.ListenAndServe(":8080", r))
+	if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		log.Fatalf("listen: %s\n", err)
+	}
+}
+
+func loggingMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		msg := fmt.Sprintf("Request %s %s from %s",
+			r.Method, r.RequestURI, r.RemoteAddr)
+		logger.GetLogger().Info(msg)
+		next.ServeHTTP(w, r)
+	})
 }
