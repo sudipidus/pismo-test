@@ -9,6 +9,8 @@
     <file url="file://$PROJECT_DIR$/db/migrations/000003_create_transaction_table.up.sql" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/db/migrations/000004_change_id_to_int_in_operation_types.down.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/db/migrations/000004_change_id_to_int_in_operation_types.up.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/db/migrations/000006_add_balance_to_transactions.down.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/db/migrations/000006_add_balance_to_transactions.up.sql" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/db/seed.go" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/scripts/init-db.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/storage/storage.go" dialect="GenericSQL" />

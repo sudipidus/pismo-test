@@ -15,27 +15,27 @@ func SeedOperationType(storage2 storage2.Storage) {
 	opTypes := []models.OperationType{
 		{
 			ID:          1,
-			Type:        "NORMAL_PURCHUASE",
-			Description: "Normal Purchuase using account",
+			Type:        "CASH_PURCHUASE",
+			Description: "cash Purchuase using account",
 			IsCredit:    false,
 		},
 		{
 			ID:          2,
-			Type:        "WITHDRAWAL",
-			Description: "Withdrawal from account",
+			Type:        "INSTALLMENT_PURCHUASE",
+			Description: "installment purchuase from account",
 			IsCredit:    false,
 		},
 		{
 			ID:          3,
-			Type:        "CREDIT_VOUCHER",
-			Description: "Voucher Credit to the account",
-			IsCredit:    true,
+			Type:        "WITHDRAWAL",
+			Description: "withdrawal the account",
+			IsCredit:    false,
 		},
 		{
 			ID:          4,
-			Type:        "INSTALLMENT_PURCHUASE",
-			Description: "Installment Purchuase using account",
-			IsCredit:    false,
+			Type:        "PAYMENT",
+			Description: "Payment to the account",
+			IsCredit:    true,
 		},
 	}
 	_, err := storage2.SeedOperationType(context.Background(), opTypes)

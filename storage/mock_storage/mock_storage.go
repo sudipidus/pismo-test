@@ -81,6 +81,21 @@ func (mr *MockStorageMockRecorder) FetchAccount(ctx, accountID interface{}) *gom
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FetchAccount", reflect.TypeOf((*MockStorage)(nil).FetchAccount), ctx, accountID)
 }
 
+// FetchPendingTransaction mocks base method.
+func (m *MockStorage) FetchPendingTransaction(ctx context.Context, accountID int) ([]*models.Transaction, *errors.Error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FetchPendingTransaction", ctx, accountID)
+	ret0, _ := ret[0].([]*models.Transaction)
+	ret1, _ := ret[1].(*errors.Error)
+	return ret0, ret1
+}
+
+// FetchPendingTransaction indicates an expected call of FetchPendingTransaction.
+func (mr *MockStorageMockRecorder) FetchPendingTransaction(ctx, accountID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FetchPendingTransaction", reflect.TypeOf((*MockStorage)(nil).FetchPendingTransaction), ctx, accountID)
+}
+
 // SeedOperationType mocks base method.
 func (m *MockStorage) SeedOperationType(ctx context.Context, operationTypes []models.OperationType) (*[]models.OperationType, *errors.Error) {
 	m.ctrl.T.Helper()
@@ -94,4 +109,19 @@ func (m *MockStorage) SeedOperationType(ctx context.Context, operationTypes []mo
 func (mr *MockStorageMockRecorder) SeedOperationType(ctx, operationTypes interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SeedOperationType", reflect.TypeOf((*MockStorage)(nil).SeedOperationType), ctx, operationTypes)
+}
+
+// UpdateTransactionBalance mocks base method.
+func (m *MockStorage) UpdateTransactionBalance(ctx context.Context, transactionID int, balance float64) (*models.Transaction, *errors.Error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateTransactionBalance", ctx, transactionID, balance)
+	ret0, _ := ret[0].(*models.Transaction)
+	ret1, _ := ret[1].(*errors.Error)
+	return ret0, ret1
+}
+
+// UpdateTransactionBalance indicates an expected call of UpdateTransactionBalance.
+func (mr *MockStorageMockRecorder) UpdateTransactionBalance(ctx, transactionID, balance interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateTransactionBalance", reflect.TypeOf((*MockStorage)(nil).UpdateTransactionBalance), ctx, transactionID, balance)
 }

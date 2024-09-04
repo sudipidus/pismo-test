@@ -17,6 +17,17 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    image: redis:6.2
+    container_name: pismo-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   test_db:
     image: postgres:13
     container_name: pismo-postgres-test
@@ -42,10 +53,14 @@ services:
       DB_PASSWORD: pismo-secret
       DB_NAME: pismo
       STORAGE_TYPE: postgres
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     ports:
       - "8080:8080"
     depends_on:
       db:
+        condition: service_healthy
+      redis:
         condition: service_healthy
 
 

@@ -1,0 +1,67 @@
+# Contains curls for a series of transactions which do a debit and then a pauyment (credit)
+
+###
+
+# curl -X 'POST'
+#  'http://localhost:8080/transactions'
+#  -H 'accept: application/json'
+#  -H 'Content-Type: application/json'
+#  -d '{
+#  "account_id": 1,
+#  "amount": 50,
+#  "operation_type_id": 1
+#}'
+POST http://localhost:8080/transactions
+accept: application/json
+Content-Type: application/json
+
+{
+  "account_id": 1,
+  "amount": 50,
+  "operation_type_id": 1
+}
+
+###
+
+# curl -X 'POST'
+#  'http://localhost:8080/transactions'
+#  -H 'accept: application/json'
+#  -H 'Content-Type: application/json'
+#  -d '{
+#  "account_id": 1,
+#  "amount": 40,
+#  "operation_type_id": 4
+#}'
+POST http://localhost:8080/transactions
+accept: application/json
+Content-Type: application/json
+
+{
+  "account_id": 1,
+  "amount": 40,
+  "operation_type_id": 4
+}
+
+###
+# curl -X 'POST'
+#  'http://localhost:8080/transactions'
+#  -H 'accept: application/json'
+#  -H 'Content-Type: application/json'
+#  -d '{
+#  "account_id": 1,
+#  "amount": 20,
+#  "operation_type_id": 4
+#}'
+POST http://localhost:8080/transactions
+accept: application/json
+Content-Type: application/json
+
+{
+  "account_id": 1,
+  "amount": 20,
+  "operation_type_id": 4
+}
+
+###
+
+
